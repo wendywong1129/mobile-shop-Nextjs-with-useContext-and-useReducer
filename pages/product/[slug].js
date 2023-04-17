@@ -98,9 +98,9 @@ export default function ProductPage({ product }) {
 
   return (
     <Layout title={product.name}>
-      <button className="mb-12 secondary-button">
-        <Link href="/">Back to Products</Link>
-      </button>
+      <Link href="/">
+        <button className="mb-12 secondary-button">Back to Products</button>
+      </Link>
       <div className="grid md:grid-cols-5">
         <div className="md:col-span-2">
           <Image
@@ -229,7 +229,7 @@ export default function ProductPage({ product }) {
                   className="border-b-2"
                 >
                   login
-                </Link>{" "}
+                </Link>
                 to write a comment
               </h2>
             )}

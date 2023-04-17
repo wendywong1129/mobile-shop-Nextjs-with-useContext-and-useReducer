@@ -4,14 +4,18 @@ import db from "../../../../utils/db";
 import Order from "../../../../models/Order";
 
 const handler = async (req, res) => {
+  const {
+    query: { id },
+  } = req;
+
   const session = await getSession({ req });
   if (!session) {
-    return res.status(401).send("Login required");
+    return res.status(401).send("Error: Login required");
   }
 
   await db.connect();
 
-  const order = await Order.findById(req.query.id);
+  const order = await Order.findById(id);
 
   await db.disconnect();
 

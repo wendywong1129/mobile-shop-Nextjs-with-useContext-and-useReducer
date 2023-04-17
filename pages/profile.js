@@ -54,9 +54,9 @@ export default function ProfilePage() {
           <label htmlFor="name">Name</label>
           <input
             id="name"
-            className="w-full"
             type="text"
             autoFocus
+            className="w-full"
             {...register("name", {
               required: "Please enter name",
             })}
@@ -71,9 +71,8 @@ export default function ProfilePage() {
           <label htmlFor="email">Email</label>
           <input
             id="email"
-            className="w-full"
             type="email"
-            autoFocus
+            className="w-full"
             {...register("email", {
               required: "Please enter email",
               pattern: {
@@ -92,9 +91,8 @@ export default function ProfilePage() {
           <label htmlFor="password">Password</label>
           <input
             id="password"
-            className="w-full"
             type="password"
-            autoFocus
+            className="w-full"
             {...register("password", {
               minLength: {
                 value: 6,
@@ -111,10 +109,9 @@ export default function ProfilePage() {
         <div className="mb-10 bg-transparent">
           <label htmlFor="confirmPassword">Confirm Password</label>
           <input
-            className="w-full"
             id="confirmPassword"
             type="password"
-            autoFocus
+            className="w-full"
             {...register("confirmPassword", {
               validate: (value) => value === getValues("password"),
               minLength: {

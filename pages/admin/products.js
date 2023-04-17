@@ -24,13 +24,6 @@ function reducer(state, action) {
     case "FETCH_FAIL":
       return { ...state, loading: false, error: action.payload };
 
-    case "CREATE_REQUEST":
-      return { ...state, loadingCreate: true };
-    case "CREATE_SUCCESS":
-      return { ...state, loadingCreate: false };
-    case "CREATE_FAIL":
-      return { ...state, loadingCreate: false };
-
     case "DELETE_REQUEST":
       return { ...state, loadingDelete: true };
     case "DELETE_SUCCESS":
@@ -49,30 +42,13 @@ export default function AdminProductsPage() {
   const router = useRouter();
 
   const [state, dispatch] = useReducer(reducer, initialState);
-  const {
-    loading,
-    products,
-    error,
-    loadingCreate,
-    loadingDelete,
-    successDelete,
-  } = state;
+  const { loading, products, error, loadingDelete, successDelete } = state;
 
   const createHandler = () => {
     if (!window.confirm("Are you sure?")) {
       return;
     }
     router.push(`/admin/product/create`);
-    // try {
-    //   dispatch({ type: "CREATE_REQUEST" });
-    //   const { data } = await axios.post(`/api/admin/products`);
-    //   dispatch({ type: "CREATE_SUCCESS" });
-    //   toast.success("Product created successfully");
-    //   router.push(`/admin/product/${data.product._id}/edit`);
-    // } catch (err) {
-    //   dispatch({ type: "CREATE_FAIL" });
-    //   toast.error(catchError(err));
-    // }
   };
 
   const deleteHandler = async (productId) => {
@@ -114,12 +90,8 @@ export default function AdminProductsPage() {
         <div className="flex justify-between">
           <h1 className="text-3xl font-bold">Products</h1>
           {loadingDelete && <div>Deleting product...</div>}
-          <button
-            className="primary-button"
-            disabled={loadingCreate}
-            onClick={createHandler}
-          >
-            {loadingCreate ? "Loading" : "Create"}
+          <button className="primary-button" onClick={createHandler}>
+            Create
           </button>
         </div>
 

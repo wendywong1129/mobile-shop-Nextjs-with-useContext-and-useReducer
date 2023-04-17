@@ -6,7 +6,7 @@ import { catchError } from "../../utils/error";
 
 const initialState = {
   loading: true,
-  summary: { salesData: [] },
+  summary: {},
   error: "",
 };
 
@@ -26,7 +26,7 @@ function reducer(state, action) {
 export default function AdminSummaryPage() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { loading, summary, error } = state;
-  // console.log(summary);
+  console.log("summary:", summary);
 
   useEffect(() => {
     const fetchData = async () => {

@@ -6,12 +6,13 @@ import Order from "../../../../../models/Order";
 const handler = async (req, res) => {
   const session = await getSession({ req });
   if (!session || (session && !session.user.isAdmin)) {
-    return res.status(401).send("Login as admin required");
+    return res.status(401).send("Error: Login as admin required");
   }
 
   await db.connect();
 
-  const order = await Order.findById(req.query.id);
+  const { id } = req.query;
+  const order = await Order.findById(id);
   if (order) {
     order.isDelivered = true;
     order.deliveredAt = Date.now();

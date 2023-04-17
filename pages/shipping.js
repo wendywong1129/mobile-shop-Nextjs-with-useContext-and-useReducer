@@ -1,7 +1,6 @@
 import { useEffect, useContext } from "react";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
-import Cookies from "js-cookie";
 import Layout from "../components/Layout";
 import CheckoutSteps from "../components/CheckoutSteps";
 import { Store } from "../utils/store";
@@ -32,20 +31,6 @@ export default function ShippingPage() {
       type: "SAVE_SHIPPING_ADDRESS",
       payload: { fullName, address, city, postalCode, country },
     });
-
-    Cookies.set(
-      "cart",
-      JSON.stringify({
-        ...cart,
-        shippingInfo: {
-          fullName,
-          address,
-          city,
-          postalCode,
-          country,
-        },
-      })
-    );
 
     router.push("/payment");
   };

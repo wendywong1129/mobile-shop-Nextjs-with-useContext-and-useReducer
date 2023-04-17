@@ -1,7 +1,7 @@
-import { useRouter } from "next/router";
-import { SessionProvider, useSession } from "next-auth/react";
+import { SessionProvider } from "next-auth/react";
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { StoreProvider } from "../utils/store";
+import Auth from "../utils/auth";
 import "../styles/globals.css";
 
 export default function App({
@@ -23,25 +23,4 @@ export default function App({
       </StoreProvider>
     </SessionProvider>
   );
-}
-
-function Auth({ children, adminOnly }) {
-  const router = useRouter();
-
-  const { status, data: session } = useSession({
-    required: true,
-    onUnauthenticated() {
-      router.push("/unauthorization?message=Login required");
-    },
-  });
-
-  if (status === "loading") {
-    return <div>Loading...</div>;
-  }
-
-  if (adminOnly && !session.user.isAdmin) {
-    router.push("/unauthorization?message=Login as admin required");
-  }
-
-  return children;
 }

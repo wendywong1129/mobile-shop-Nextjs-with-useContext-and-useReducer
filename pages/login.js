@@ -50,11 +50,11 @@ export default function LoginPage() {
         <div className="mb-6">
           <label htmlFor="email">Email Address</label>
           <input
-            className="w-full"
             id="email"
             type="email"
             placeholder="Your email address..."
             autoFocus
+            className="w-full"
             {...register("email", {
               required: "Please enter your email",
               pattern: {
@@ -72,10 +72,10 @@ export default function LoginPage() {
         <div className="mb-10">
           <label htmlFor="password">Password</label>
           <input
-            className="w-full"
             id="password"
             type="password"
             placeholder="Your password..."
+            className="w-full"
             {...register("password", {
               required: "Please enter your password",
               minLength: {

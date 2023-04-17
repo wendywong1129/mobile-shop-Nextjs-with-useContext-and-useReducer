@@ -54,17 +54,6 @@ export default function AdminSalesPage() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { loading, salesData, error } = state;
 
-  const chartData = {
-    labels: salesData.map((x) => x._id), // [2023-2,2023-3,2023-4]
-    datasets: [
-      {
-        label: "Sales",
-        backgroundColor: "rgba(252, 211, 77, 1)",
-        data: salesData.map((x) => x.totalSales),
-      },
-    ],
-  };
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -79,6 +68,17 @@ export default function AdminSalesPage() {
     fetchData();
   }, []);
 
+  const chartData = {
+    labels: salesData.map((x) => x._id), // [2023-2,2023-3,2023-4]
+    datasets: [
+      {
+        label: "Sales",
+        backgroundColor: "rgba(252, 211, 77, 1)",
+        data: salesData.map((x) => x.totalSales),
+      },
+    ],
+  };
+
   return (
     <Layout>
       <div className="max-w-7xl mx-auto">
@@ -89,7 +89,7 @@ export default function AdminSalesPage() {
           <div className="alert-error">{error}</div>
         ) : (
           <Bar
-          className="mt-12"
+            className="mt-12"
             options={{
               legend: { display: true, position: "right" },
             }}

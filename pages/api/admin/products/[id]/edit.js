@@ -3,6 +3,23 @@ import { getSession } from "next-auth/react";
 import db from "../../../../../utils/db";
 import Product from "../../../../../models/Product";
 
+const handler = async (req, res) => {
+  const session = await getSession({ req });
+  if (!session || (session && !session.user.isAdmin)) {
+    return res.status(401).send("Login as admin required");
+  }
+
+  if (req.method === "GET") {
+    return getHandler(req, res);
+  } else if (req.method === "PUT") {
+    return putHandler(req, res);
+  } else if (req.method === "DELETE") {
+    return deleteHandler(req, res);
+  } else {
+    return res.status(400).send({ message: `${req.method} not supported` });
+  }
+};
+
 const getHandler = async (req, res) => {
   await db.connect();
 
@@ -51,7 +68,8 @@ const putHandler = async (req, res) => {
 const deleteHandler = async (req, res) => {
   await db.connect();
 
-  const deletedProduct = await Product.findById(req.query.id);
+  const { id } = req.query;
+  const deletedProduct = await Product.findById(id);
   if (deletedProduct) {
     await deletedProduct.deleteOne();
 
@@ -64,23 +82,6 @@ const deleteHandler = async (req, res) => {
     await db.disconnect();
 
     res.status(404).send({ message: "Product not found" });
-  }
-};
-
-const handler = async (req, res) => {
-  const session = await getSession({ req });
-  if (!session || (session && !session.user.isAdmin)) {
-    return res.status(401).send("Login as admin required");
-  }
-
-  if (req.method === "GET") {
-    return getHandler(req, res);
-  } else if (req.method === "PUT") {
-    return putHandler(req, res);
-  } else if (req.method === "DELETE") {
-    return deleteHandler(req, res);
-  } else {
-    return res.status(400).send({ message: `${req.method} not supported` });
   }
 };
 

@@ -1,8 +1,8 @@
 import { useEffect, useReducer } from "react";
 import Link from "next/link";
 import axios from "axios";
-import Layout from "../../components/Layout";
-import { catchError } from "../../utils/error";
+import Layout from "../components/Layout";
+import { catchError } from "../utils/error";
 
 const initialState = {
   loading: true,

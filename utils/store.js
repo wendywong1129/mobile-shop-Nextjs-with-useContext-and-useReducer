@@ -45,9 +45,26 @@ function reducer(state, action) {
         },
       };
     case "CART_CLEAR_ITEMS":
+      Cookies.set(
+        "cart",
+        JSON.stringify({
+          ...state.cart,
+          cartItems: [],
+        })
+      );
       return { ...state, cart: { ...state.cart, cartItems: [] } };
 
     case "SAVE_SHIPPING_ADDRESS":
+      Cookies.set(
+        "cart",
+        JSON.stringify({
+          ...state.cart,
+          shippingInfo: {
+            ...state.cart.shippingInfo,
+            ...action.payload,
+          },
+        })
+      );
       return {
         ...state,
         cart: {
@@ -60,6 +77,13 @@ function reducer(state, action) {
       };
 
     case "SAVE_PAYMENT_METHOD":
+      Cookies.set(
+        "cart",
+        JSON.stringify({
+          ...state.cart,
+          paymentMethod: action.payload,
+        })
+      );
       return {
         ...state,
         cart: {
@@ -76,5 +100,6 @@ function reducer(state, action) {
 export function StoreProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const value = { state, dispatch };
+
   return <Store.Provider value={value}>{children}</Store.Provider>;
 }

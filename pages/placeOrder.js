@@ -3,7 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import axios from "axios";
-import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import Layout from "../components/Layout";
 import CheckoutSteps from "../components/CheckoutSteps";
@@ -46,13 +45,6 @@ export default function PlaceOrderPage() {
       });
       setLoading(false);
       dispatch({ type: "CART_CLEAR_ITEMS" });
-      Cookies.set(
-        "cart",
-        JSON.stringify({
-          ...cart,
-          cartItems: [],
-        })
-      );
       router.push(`/order/${data._id}`);
     } catch (err) {
       setLoading(false);

@@ -6,8 +6,9 @@ import Order from "../../../../models/Order";
 const handler = async (req, res) => {
   const session = await getSession({ req });
   if (!session || (session && !session.user.isAdmin)) {
-    return res.status(401).send("Login as admin required");
+    return res.status(401).send("Error: Login as admin required");
   }
+
   if (req.method === "GET") {
     await db.connect();
 

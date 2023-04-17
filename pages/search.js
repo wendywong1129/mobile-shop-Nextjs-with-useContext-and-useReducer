@@ -10,7 +10,7 @@ import Product from "../models/Product";
 
 const PAGE_SIZE = 4;
 
-const prices = [
+const priceRanges = [
   {
     name: "$1 to $500",
     value: "1-500",
@@ -41,6 +41,7 @@ export default function SearchPage({
   pages,
 }) {
   const { state, dispatch } = useContext(Store);
+
   const addToCartHandler = async (product) => {
     const existingItem = state.cart.cartItems.find(
       (cartItem) => cartItem.slug === product.slug
@@ -56,16 +57,40 @@ export default function SearchPage({
   };
 
   const router = useRouter();
-
+  const { query } = router;
+  // default value
   const {
     category = "all",
     brand = "all",
-    price = "all",
+    priceRange = "all",
     rating = "all",
     sort = "featured",
     page = 1,
     keyword = "all",
-  } = router.query;
+  } = query;
+
+  const filterSearch = ({
+    category,
+    brand,
+    priceRange,
+    sort,
+    page,
+    keyword,
+  }) => {
+    const { query } = router;
+
+    if (category) query.category = category;
+    if (brand) query.brand = brand;
+    if (priceRange) query.priceRange = priceRange;
+    if (sort) query.sort = sort;
+    if (page) query.page = page;
+    if (keyword) query.keyword = keyword;
+
+    router.push({
+      pathname: router.pathname,
+      query,
+    });
+  };
 
   const categoryHandler = (e) => {
     filterSearch({ category: e.target.value });
@@ -75,8 +100,8 @@ export default function SearchPage({
     filterSearch({ brand: e.target.value });
   };
 
-  const priceHandler = (e) => {
-    filterSearch({ price: e.target.value });
+  const priceRangeHandler = (e) => {
+    filterSearch({ priceRange: e.target.value });
   };
 
   const sortHandler = (e) => {
@@ -85,33 +110,6 @@ export default function SearchPage({
 
   const pageHandler = (page) => {
     filterSearch({ page });
-  };
-
-  const filterSearch = ({
-    category,
-    brand,
-    price,
-    sort,
-    page,
-    min,
-    max,
-    keyword,
-  }) => {
-    const { query } = router;
-
-    if (category) query.category = category;
-    if (brand) query.brand = brand;
-    if (price) query.price = price;
-    if (sort) query.sort = sort;
-    if (page) query.page = page;
-    if (min) query.min ? query.min : query.min === 0 ? 0 : min;
-    if (max) query.max ? query.max : query.max === 0 ? 0 : max;
-    if (keyword) query.keyword = keyword;
-
-    router.push({
-      pathname: router.pathname,
-      query,
-    });
   };
 
   return (
@@ -148,12 +146,16 @@ export default function SearchPage({
           </div>
           <div className="mb-6">
             <h2 className="mb-2 font-semibold">Prices</h2>
-            <select className="w-full" value={price} onChange={priceHandler}>
+            <select
+              className="w-full"
+              value={priceRange}
+              onChange={priceRangeHandler}
+            >
               <option value="all">All</option>
-              {prices &&
-                prices.map((price) => (
-                  <option key={price.value} value={price.value}>
-                    {price.name}
+              {priceRanges &&
+                priceRanges.map((priceRange) => (
+                  <option key={priceRange.value} value={priceRange.value}>
+                    {priceRange.name}
                   </option>
                 ))}
             </select>
@@ -166,23 +168,23 @@ export default function SearchPage({
               category == "all" &&
               brand == "all" &&
               rating == "all" &&
-              price == "all" ? (
+              priceRange == "all" ? (
                 <div className="text-3xl font-semibold">Search Results</div>
               ) : products.length === 0 ? (
-                "No"
+                "No Results"
               ) : (
-                productsCount + " Results"
+                productsCount + " Results: "
               )}
-              {keyword !== "all" && keyword !== "" && " : " + keyword}
-              {category !== "all" && " : " + category}
-              {brand !== "all" && " : " + brand}
-              {price !== "all" && " : Price " + price}
+              {keyword !== "all" && keyword !== "" && keyword + " , "}
+              {category !== "all" && category + " , "}
+              {brand !== "all" && brand + " , "}
+              {priceRange !== "all" && " $" + priceRange + " , "}
               &nbsp;
               {(keyword !== "all" && keyword !== "") ||
               category !== "all" ||
               brand !== "all" ||
               rating !== "all" ||
-              price !== "all" ? (
+              priceRange !== "all" ? (
                 <button onClick={() => router.push("/search")}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -223,27 +225,30 @@ export default function SearchPage({
               ))}
             </div>
             <ul className="flex justify-end">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="2.5"
-                stroke="currentColor"
-                className="w-4 h-4 mt-2 hover:text-gray-300"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M15.75 19.5L8.25 12l7.5-7.5"
-                />
-              </svg>
+              {!(+page === 1) && (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="2.5"
+                  stroke="currentColor"
+                  className="w-4 h-4 mt-2 hover:text-gray-300"
+                  onClick={() => pageHandler(+page - 1)}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M15.75 19.5L8.25 12l7.5-7.5"
+                  />
+                </svg>
+              )}
               {products.length > 0 &&
                 [...Array(pages).keys()].map((pageNumber) => (
                   <li key={pageNumber}>
                     <button
                       className={`m-1 px-2 bg-transparent rounded font-semibold hover:text-gray-300 ${
                         +page === pageNumber + 1
-                          ? "bg-pink-300 hover:text-white"
+                          ? "bg-pink-700 hover:text-white"
                           : ""
                       } `}
                       onClick={() => pageHandler(pageNumber + 1)}
@@ -252,20 +257,23 @@ export default function SearchPage({
                     </button>
                   </li>
                 ))}
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="2.5"
-                stroke="currentColor"
-                className="w-4 h-4 mt-2 hover:text-gray-300"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M8.25 4.5l7.5 7.5-7.5 7.5"
-                />
-              </svg>
+              {!(+page === pages) && (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="2.5"
+                  stroke="currentColor"
+                  className="w-4 h-4 mt-2 hover:text-gray-300 "
+                  onClick={() => pageHandler(+page + 1)}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M8.25 4.5l7.5 7.5-7.5 7.5"
+                  />
+                </svg>
+              )}
             </ul>
           </div>
         </div>
@@ -274,12 +282,15 @@ export default function SearchPage({
   );
 }
 
-export async function getServerSideProps({ query }) {
+export async function getServerSideProps(context) {
+  const { query } = context;
+  console.log("query: ", query);
+
   const pageSize = query.pageSize || PAGE_SIZE;
   const page = query.page || 1;
   const category = query.category || "";
   const brand = query.brand || "";
-  const price = query.price || "";
+  const priceRange = query.priceRange || "";
   const sort = query.sort || "";
   const keyword = query.keyword || "";
 
@@ -294,12 +305,12 @@ export async function getServerSideProps({ query }) {
       : {};
   const categoryFilter = category && category !== "all" ? { category } : {};
   const brandFilter = brand && brand !== "all" ? { brand } : {};
-  const priceFilter =
-    price && price !== "all"
+  const priceRangeFilter =
+    priceRange && priceRange !== "all"
       ? {
           price: {
-            $gte: Number(price.split("-")[0]),
-            $lte: Number(price.split("-")[1]),
+            $gte: Number(priceRange.split("-")[0]),
+            $lte: Number(priceRange.split("-")[1]),
           },
         }
       : {};
@@ -326,7 +337,7 @@ export async function getServerSideProps({ query }) {
     {
       ...keywordFilter,
       ...categoryFilter,
-      ...priceFilter,
+      ...priceRangeFilter,
       ...brandFilter,
     },
     "-reviews"
@@ -339,7 +350,7 @@ export async function getServerSideProps({ query }) {
   const productsCount = await Product.countDocuments({
     ...keywordFilter,
     ...categoryFilter,
-    ...priceFilter,
+    ...priceRangeFilter,
     ...brandFilter,
   });
 

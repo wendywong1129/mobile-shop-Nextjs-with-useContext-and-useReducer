@@ -3,10 +3,28 @@ import { getSession } from "next-auth/react";
 import db from "../../../../../utils/db";
 import User from "../../../../../models/User";
 
+const handler = async (req, res) => {
+  const session = await getSession({ req });
+  if (!session || !session.user.isAdmin) {
+    return res.status(401).send("Login as admin required");
+  }
+
+  if (req.method === "GET") {
+    return getHandler(req, res);
+  } else if (req.method === "PUT") {
+    return putHandler(req, res);
+  } else if (req.method === "DELETE") {
+    return deleteHandler(req, res);
+  } else {
+    return res.status(400).send({ message: `${req.method} not supported` });
+  }
+};
+
 const getHandler = async (req, res) => {
   await db.connect();
 
-  const user = await User.findById(req.query.id);
+  const { id } = req.query;
+  const user = await User.findById(id);
 
   await db.disconnect();
 
@@ -16,7 +34,8 @@ const getHandler = async (req, res) => {
 const putHandler = async (req, res) => {
   await db.connect();
 
-  const updatedUser = await User.findById(req.query.id);
+  const { id } = req.query;
+  const updatedUser = await User.findById(id);
   if (updatedUser) {
     const { name, email, isAdmin } = req.body;
     updatedUser.name = name;
@@ -42,7 +61,8 @@ const putHandler = async (req, res) => {
 const deleteHandler = async (req, res) => {
   await db.connect();
 
-  const user = await User.findById(req.query.id);
+  const { id } = req.query;
+  const user = await User.findById(id);
 
   if (user) {
     if (user.email === "admin@gmail.com") {
@@ -57,23 +77,6 @@ const deleteHandler = async (req, res) => {
     await db.disconnect();
 
     res.status(404).send({ message: "User not found" });
-  }
-};
-
-const handler = async (req, res) => {
-  const session = await getSession({ req });
-  if (!session || !session.user.isAdmin) {
-    return res.status(401).send("Login as admin required");
-  }
-
-  if (req.method === "GET") {
-    return getHandler(req, res);
-  } else if (req.method === "PUT") {
-    return putHandler(req, res);
-  } else if (req.method === "DELETE") {
-    return deleteHandler(req, res);
-  } else {
-    return res.status(400).send({ message: `${req.method} not supported` });
   }
 };
 

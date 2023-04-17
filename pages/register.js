@@ -59,10 +59,10 @@ export default function RegisterPage() {
           <label htmlFor="name">Name</label>
           <input
             id="name"
-            className="w-full"
             type="text"
             placeholder="Your name..."
             autoFocus
+            className="w-full"
             {...register("name", {
               required: "Please enter name",
             })}
@@ -77,9 +77,9 @@ export default function RegisterPage() {
           <label htmlFor="email">Email</label>
           <input
             id="email"
-            className="w-full"
             type="email"
             placeholder="Your email address..."
+            className="w-full"
             {...register("email", {
               required: "Please enter email",
               pattern: {
@@ -98,9 +98,9 @@ export default function RegisterPage() {
           <label htmlFor="password">Password</label>
           <input
             id="password"
-            className="w-full"
             type="password"
             placeholder="Your password..."
+            className="w-full"
             {...register("password", {
               required: "Please enter password",
               minLength: {
@@ -119,9 +119,9 @@ export default function RegisterPage() {
           <label htmlFor="confirmPassword">Confirm Password</label>
           <input
             id="confirmPassword"
-            className="w-full"
             type="password"
             placeholder="Confirm your password..."
+            className="w-full"
             {...register("confirmPassword", {
               required: "Please enter confirm password",
               validate: (value) => value === getValues("password"),

@@ -8,7 +8,7 @@ import User from "../../../models/User";
 const handler = async (req, res) => {
   const session = await getSession({ req });
   if (!session || (session && !session.user.isAdmin)) {
-    return res.status(401).send("Login as admin required");
+    return res.status(401).send("Error: Login as admin required");
   }
 
   await db.connect();
@@ -30,20 +30,9 @@ const handler = async (req, res) => {
   // console.log("ordersPriceGroup:", ordersPriceGroup);
   // console.log("ordersPrice:", ordersPrice);
 
-  const salesData = await Order.aggregate([
-    {
-      $group: {
-        _id: { $dateToString: { format: "%Y-%m", date: "$createdAt" } },
-        totalSales: { $sum: "$totalPrice" },
-      },
-    },
-  ]);
-  // console.log("salesData:", salesData);
-  // console.log("totalSales:",salesData[0].totalSales);
-
   await db.disconnect();
 
-  res.send({ ordersCount, productsCount, usersCount, ordersPrice, salesData });
+  res.send({ ordersCount, productsCount, usersCount, ordersPrice });
 };
 
 export default handler;

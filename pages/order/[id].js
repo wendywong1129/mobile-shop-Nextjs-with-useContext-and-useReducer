@@ -90,6 +90,46 @@ export default function OrderPage() {
     deliveredAt,
   } = order;
 
+  useEffect(() => {
+    const fetchOrder = async () => {
+      try {
+        dispatch({ type: "FETCH_REQUEST" });
+        const { data } = await axios.get(`/api/orders/${orderId}`);
+        dispatch({ type: "FETCH_SUCCESS", payload: data });
+      } catch (err) {
+        dispatch({ type: "FETCH_FAIL", payload: catchError(err) });
+      }
+    };
+
+    if (
+      !order._id ||
+      (order._id && order._id !== orderId) ||
+      successPay ||
+      successDeliver
+    ) {
+      fetchOrder();
+      if (successPay) {
+        dispatch({ type: "PAY_RESET" });
+      }
+      if (successDeliver) {
+        dispatch({ type: "DELIVER_RESET" });
+      }
+    } else {
+      const loadPaypalScript = async () => {
+        const { data: clientId } = await axios.get("/api/keys/paypal");
+        paypalDispatch({
+          type: "resetOptions",
+          value: {
+            "client-id": clientId,
+            currency: "AUD",
+          },
+        });
+        paypalDispatch({ type: "setLoadingStatus", value: "pending" });
+      };
+      loadPaypalScript();
+    }
+  }, [orderId, order, paypalDispatch, successPay, successDeliver]);
+
   function createOrder(data, actions) {
     return actions.order
       .create({
@@ -100,13 +140,14 @@ export default function OrderPage() {
         ],
       })
       .then((orderId) => {
+        console.log("orderId: ", orderId);
         return orderId;
       });
   }
 
   function onApprove(data, actions) {
     return actions.order.capture().then(async function (details) {
-      console.log(details);
+      console.log("details: ", details);
       try {
         dispatch({ type: "PAY_REQUEST" });
         const { data } = await axios.put(
@@ -140,46 +181,6 @@ export default function OrderPage() {
       toast.error(catchError(err));
     }
   }
-
-  useEffect(() => {
-    const fetchOrder = async () => {
-      try {
-        dispatch({ type: "FETCH_REQUEST" });
-        const { data } = await axios.get(`/api/orders/${orderId}`);
-        dispatch({ type: "FETCH_SUCCESS", payload: data });
-      } catch (err) {
-        dispatch({ type: "FETCH_FAIL", payload: catchError(err) });
-      }
-    };
-
-    if (
-      !order._id ||
-      successPay ||
-      successDeliver ||
-      (order._id && order._id !== orderId)
-    ) {
-      fetchOrder();
-      if (successPay) {
-        dispatch({ type: "PAY_RESET" });
-      }
-      if (successDeliver) {
-        dispatch({ type: "DELIVER_RESET" });
-      }
-    } else {
-      const loadPaypalScript = async () => {
-        const { data: clientId } = await axios.get("/api/keys/paypal");
-        paypalDispatch({
-          type: "resetOptions",
-          value: {
-            "client-id": clientId,
-            currency: "AUD",
-          },
-        });
-        paypalDispatch({ type: "setLoadingStatus", value: "pending" });
-      };
-      loadPaypalScript();
-    }
-  }, [orderId, order, paypalDispatch, successPay, successDeliver]);
 
   return (
     <Layout title={`Order ${orderId}`}>

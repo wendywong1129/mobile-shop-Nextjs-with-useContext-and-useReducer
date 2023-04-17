@@ -78,6 +78,7 @@ export default function AdminProductEditPage() {
       formData.append("upload_preset", "shoppier");
       formData.append("api_key", process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY);
       const { data } = await axios.post(url, formData);
+      console.log("cloudinary data: ", data);
       dispatch({ type: "UPLOAD_SUCCESS" });
       setValue(imageField, data.secure_url);
       toast.success("File uploaded successfully");
@@ -158,9 +159,9 @@ export default function AdminProductEditPage() {
               <label htmlFor="name">Name</label>
               <input
                 id="name"
-                className="w-full"
                 type="text"
                 autoFocus
+                className="w-full"
                 {...register("name", {
                   required: "Please enter name",
                 })}
@@ -175,8 +176,8 @@ export default function AdminProductEditPage() {
               <label htmlFor="slug">Slug</label>
               <input
                 id="slug"
-                className="w-full"
                 type="text"
+                className="w-full"
                 {...register("slug", {
                   required: "Please enter slug",
                 })}
@@ -191,8 +192,8 @@ export default function AdminProductEditPage() {
               <label htmlFor="price">Price</label>
               <input
                 id="price"
-                className="w-full"
                 type="number"
+                className="w-full"
                 {...register("price", {
                   required: "Please enter price",
                 })}
@@ -207,8 +208,8 @@ export default function AdminProductEditPage() {
               <label htmlFor="image">image</label>
               <input
                 id="image"
-                className="w-full"
                 type="text"
+                className="w-full"
                 {...register("image", {
                   required: "Please enter image",
                 })}
@@ -220,8 +221,8 @@ export default function AdminProductEditPage() {
               )}
               <input
                 id="imageFile"
-                className="w-full"
                 type="file"
+                className="w-full"
                 onChange={uploadHandler}
               />
               {loadingUpload && <div>Uploading....</div>}
@@ -230,8 +231,8 @@ export default function AdminProductEditPage() {
               <label htmlFor="category">category</label>
               <input
                 id="category"
-                className="w-full"
                 type="text"
+                className="w-full"
                 {...register("category", {
                   required: "Please enter category",
                 })}
@@ -246,8 +247,8 @@ export default function AdminProductEditPage() {
               <label htmlFor="brand">brand</label>
               <input
                 id="brand"
-                className="w-full"
                 type="text"
+                className="w-full"
                 {...register("brand", {
                   required: "Please enter brand",
                 })}
@@ -262,8 +263,8 @@ export default function AdminProductEditPage() {
               <label htmlFor="countInStock">countInStock</label>
               <input
                 id="countInStock"
-                className="w-full"
                 type="number"
+                className="w-full"
                 {...register("countInStock", {
                   required: "Please enter countInStock",
                 })}
@@ -278,8 +279,8 @@ export default function AdminProductEditPage() {
               <label htmlFor="countInStock">description</label>
               <input
                 id="description"
-                className="w-full"
                 type="text"
+                className="w-full"
                 {...register("description", {
                   required: "Please enter description",
                 })}

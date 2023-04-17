@@ -6,7 +6,7 @@ import Order from "../../../models/Order";
 const handler = async (req, res) => {
   const session = await getSession({ req });
   if (!session) {
-    return res.status(401).send("Login required");
+    return res.status(401).send("Error: Login required");
   }
 
   await db.connect();
@@ -17,7 +17,9 @@ const handler = async (req, res) => {
     user: user._id,
   });
   const placedOrder = await newOrder.save();
+
   await db.disconnect();
+
   res.status(201).send(placedOrder);
 };
 export default handler;
