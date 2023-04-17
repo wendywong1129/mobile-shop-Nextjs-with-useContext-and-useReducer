@@ -246,10 +246,10 @@ export default function SearchPage({
                 [...Array(pages).keys()].map((pageNumber) => (
                   <li key={pageNumber}>
                     <button
-                      className={`m-1 px-2 bg-transparent rounded font-semibold hover:text-gray-300 ${
+                      className={`m-1 px-2 rounded font-semibold hover:text-gray-300 ${
                         +page === pageNumber + 1
                           ? "bg-pink-700 hover:text-white"
-                          : ""
+                          : "bg-transparent"
                       } `}
                       onClick={() => pageHandler(pageNumber + 1)}
                     >
