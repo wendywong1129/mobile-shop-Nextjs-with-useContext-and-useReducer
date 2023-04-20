@@ -11,7 +11,7 @@ export default function LoginPage() {
   const router = useRouter();
   const { redirect } = router.query;
 
-  const { data: session } = useSession();
+  const {  data: session } = useSession();
 
   useEffect(() => {
     if (session?.user) {
@@ -93,6 +93,7 @@ export default function LoginPage() {
         <div className="mb-4">
           <button className="primary-button">Log in</button>
         </div>
+
         <div className="mb-4">
           Don&apos;t have an account? &nbsp;
           <Link

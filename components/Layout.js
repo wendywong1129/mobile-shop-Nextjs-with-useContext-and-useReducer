@@ -57,9 +57,9 @@ export default function Layout({ children, title }) {
       <ToastContainer position="top-center" limit={1} />
 
       <div className="min-h-screen flex flex-col justify-between">
-        <header>
-          <nav className="h-20 px-6 flex justify-between items-center shadow-xl bg-zinc-800 md:px-12">
-            <div>
+        <header className="w-full bg-zinc-800">
+          <nav className="h-20 container m-auto px-6 flex justify-between items-center shadow-xl  md:px-12">
+            <div className="flex justify-between items-center gap-6">
               <Link
                 href="/"
                 className="flex gap-1 font-bold text-xl md:text-2xl hover:font-extrabold"
@@ -80,36 +80,37 @@ export default function Layout({ children, title }) {
                 </svg>
                 Shoppier
               </Link>
-            </div>
-            <form
-              className="w-full mx-auto ml-40 flex justify-center"
-              onSubmit={submitHandler}
-            >
-              <input
-                className="px-4 py-2 border border-r-0 rounded-tr-none rounded-br-none text-md focus:ring-1"
-                type="text"
-                placeholder="Search products..."
-                onChange={(e) => setKeyword(e.target.value)}
-              ></input>
-              <button
-                className="p-2 border border-l-0 rounded rounded-tl-none rounded-bl-none bg-transparent"
-                type="submit"
-                id="search-button"
+              <form
+                className="w-full mx-auto  flex justify-center"
+                onSubmit={submitHandler}
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  className="w-6 h-6"
+                <input
+                  className="px-4 py-2 border border-r-0 rounded-tr-none rounded-br-none text-md focus:ring-1"
+                  type="text"
+                  placeholder="Search products..."
+                  onChange={(e) => setKeyword(e.target.value)}
+                ></input>
+                <button
+                  className="p-2 border border-l-0 rounded rounded-tl-none rounded-bl-none bg-transparent"
+                  type="submit"
+                  id="search-button"
                 >
-                  <path
-                    fillRule="evenodd"
-                    d="M10.5 3.75a6.75 6.75 0 100 13.5 6.75 6.75 0 000-13.5zM2.25 10.5a8.25 8.25 0 1114.59 5.28l4.69 4.69a.75.75 0 11-1.06 1.06l-4.69-4.69A8.25 8.25 0 012.25 10.5z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </button>
-            </form>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    className="w-6 h-6"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10.5 3.75a6.75 6.75 0 100 13.5 6.75 6.75 0 000-13.5zM2.25 10.5a8.25 8.25 0 1114.59 5.28l4.69 4.69a.75.75 0 11-1.06 1.06l-4.69-4.69A8.25 8.25 0 012.25 10.5z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </button>
+              </form>
+            </div>
+
             <div className="flex gap-6">
               <div className="flex gap-1">
                 {status === "loading" ? (
